@@ -5,18 +5,14 @@ $(document).ready(function() {
         $.ajax({
 
             data : {
-              
                 name : $('#username').val(),
                 password : $('#password').val()
 
             },
-
             type: 'POST',
-            url : '/'
-
+            url : '/login'
         })
         .done(function(data){
-
           if (data.error) {
                 $('#errorAlert').text(data.error).show();
           }
