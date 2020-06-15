@@ -1,0 +1,26 @@
+{% extends 'base.html' %} 
+
+{% block head %} User Information {% endblock %} 
+
+{% block content %}
+<div class="container p-2 m-5">
+
+<div class="row">
+<div class="col-md-3">
+    <h6><strong>Name</strong></h6><p>{{users_account_info.name}}</p> 
+</div>
+<div class="col-md-3">
+    <h6><strong>Date of Birth</strong></h6><p>{{users_account_info.dob}}</p>
+</div>
+<div class="col-md-3">
+    <h6><strong>Hobby</strong></h6><p>{{users_account_info.hobby}}</p>
+</div>
+<div class="col-md-3">
+    <h6><strong>Favourite Movie</strong></h6><p>{{users_account_info.favourite_movie}}</p>
+</div>
+
+
+
+<a href="{{ url_for('signout') }}">Signout</a>
+</div>
+{% endblock %}
