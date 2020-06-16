@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, url_for, request, session, redirect, jsonify
+from flask import Flask, render_template, url_for, request, session, redirect, jsonify, flash
 from flask_pymongo import PyMongo
 from passlib.hash import pbkdf2_sha256
 
@@ -30,9 +30,8 @@ def login():
         if pbkdf2_sha256.verify(password_entered, login_user['password']):
             session['username'] = request.form['username']
             return redirect(url_for('userinfo'))
-
-    return jsonify({'error': 'Invalid login credentials'})
-
+    flash('Invalid credentials')
+    return render_template('index.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -44,14 +43,26 @@ def register():
             hash = pbkdf2_sha256.hash(request.form['password'])
             users.insert({'name': request.form['username'], 'password': hash})
             session['username'] = request.form['username']
-            return redirect(url_for('index'))
-        return 'That username already exists!'
+            
+            return render_template('additional_reg_info.html', name=mongo.db.users.find_one({"name":request.form['username']}))
+        flash('User name already exist')
+        
 
     return render_template('register.html')
 
 
+@app.route('/insert_additional_info', methods=['POST'])
+def insert_additional_info():
+    users_account_info = mongo.db.users_account_info
+    users_account_info.insert_one(request.form.to_dict())
+    return redirect(url_for('userinfo'))
+
+
 @app.route('/userinfo')
 def userinfo():
+    tim_testing = mongo.db.users_account_info.find()
+    for x in tim_testing:
+        print(x)
     return render_template('user_info.html',
                            users_account_info=
                            mongo.db.users_account_info.find_one({"name":session['username']}))

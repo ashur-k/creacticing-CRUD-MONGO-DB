@@ -19,7 +19,17 @@
       <button type="submit" class="btn btn-primary">Log In</button>
       
       <p>Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a></p>
-      <p id="errorAlert" class="error error--hidden">
+        {% with messages = get_flashed_messages() %} 
+        {% if messages %}    
+           {% for message in messages %}
+            <p>{{ message  }}</p>
+            {% endfor %}
+        
+        {% endif %} 
+        {% endwith %}
+     
+     
+     <p class="error error--hidden">
               
             </p>
     </form>

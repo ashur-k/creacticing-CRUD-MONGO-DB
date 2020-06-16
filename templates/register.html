@@ -17,8 +17,17 @@
       <label for="password">Password</label>
       <input type="password" class="form-control" id="password" name="password"/>
     </div>
-      <button type="submit" class="btn btn-primary btn-block">Register</button>
+        <p>Please provide additional inforamtion</p>
+      <button type="submit" class="btn btn-primary btn-block">Next</button>
     </form><br>
+     {% with messages = get_flashed_messages() %} 
+        {% if messages %}    
+           {% for message in messages %}
+            <p>{{ message  }}</p>
+            {% endfor %}
+        
+        {% endif %} 
+        {% endwith %}
 </div>
 </div>   
 </div>

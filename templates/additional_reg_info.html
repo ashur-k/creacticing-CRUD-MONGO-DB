@@ -1,0 +1,33 @@
+{% extends 'base.html' %} 
+{% block head %} Registeration-Page {% endblock %} 
+{% block content %}
+<div class="container">
+    <h1>Registration Page </h1>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <form method="POST" action="{{url_for('insert_additional_info')}}">
+                <div class="form-group">
+                    <label for="name">Username</label>
+                    <select id="name" name="name">
+                        <option value="{{name.name}}">{{name.name}}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Date Of birth</label>
+                    <input type="text" class="form-control" id="date_of_birth" name="date_of_birth">
+                </div>
+                <div class="form-group">
+                    <label for="hobby">Hobby</label>
+                    <input type="text" class="form-control" id="hobby" name="hobby"/>
+                </div>
+                <div class="form-group">
+                    <label for="favourite_moive">Favourite Movie</label>
+                    <input type="text" class="form-control" id="favourite_moive" name="favourite_moive">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Submit</button>
+            </form>
+            <br>
+        </div>
+    </div>
+</div>
+{% endblock %}
