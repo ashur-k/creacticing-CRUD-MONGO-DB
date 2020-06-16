@@ -17,7 +17,7 @@ mongo = PyMongo(app)
 def index():
     if 'username' in session:
         return redirect(url_for('userinfo'))
-
+    
     return render_template('index.html')
 
 
@@ -30,8 +30,10 @@ def login():
         if pbkdf2_sha256.verify(password_entered, login_user['password']):
             session['username'] = request.form['username']
             return redirect(url_for('userinfo'))
-    flash('Invalid credentials')
-    return render_template('index.html')
+    else:
+        flash(u'Invalid password provided', 'error')
+        return redirect(url_for('index'))
+
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
