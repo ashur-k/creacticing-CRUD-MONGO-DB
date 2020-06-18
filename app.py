@@ -62,9 +62,8 @@ def insert_additional_info():
 @app.route('/userinfo')
 def userinfo():
     return render_template('user_info.html',
-                           users_account_info=
-                           mongo.db.users_account_info.find_one(
-                               {"name":session['username']}))
+                           users_account_info=mongo.db.users_account_info.find_one(
+                               {'name': session['username']}))
 
 
 @app.route('/signout')
@@ -75,22 +74,31 @@ def signout():
 
 @app.route('/edit_user_info/<users_id>')
 def edit_user_info(users_id):
-    users_info =  mongo.db.users_account_info.find_one({"_id": ObjectId(users_id)})
-    user = mongo.db.users.find_one({"name": session['username']})
-    return render_template('edit_user_info.html', info=users_info, users_login_details=user)
+    users_info = \
+        mongo.db.users_account_info.find_one({'_id': ObjectId(users_id)})
+    user = mongo.db.users.find_one({'name': session['username']})
+    return render_template('edit_user_info.html', info=users_info,
+                           users_login_details=user)
 
 
-@app.route('/update_user_info/<user_id>', methods=["POST"])
+@app.route('/update_user_info/<user_id>', methods=['POST'])
 def update_user_info(user_id):
     user_info = mongo.db.users_account_info
-    user_info.update({'_id': ObjectId(user_id)},
-    {
-        'name':request.form.get('name'),
-        'date_of_birth':request.form.get('date_of_birth'),
+    user_info.update({'_id': ObjectId(user_id)}, {
+        'name': request.form.get('name'),
+        'date_of_birth': request.form.get('date_of_birth'),
         'hobby': request.form.get('hobby'),
-        'favourite_moive': request.form.get('favourite_moive')
-    })
+        'favourite_moive': request.form.get('favourite_moive'),
+        })
     return redirect(url_for('userinfo'))
+
+
+@app.route('/delete_account/<users_id>')
+def delete_account(users_id):
+    mongo.db.users.remove({'name': session['username']})
+    mongo.db.users_account_info.remove({'_id': ObjectId(users_id)})
+    session.clear()
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
