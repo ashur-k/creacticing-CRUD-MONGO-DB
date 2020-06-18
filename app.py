@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, url_for, request, session, redirect, jsonify, flash
 from flask_pymongo import PyMongo
 from passlib.hash import pbkdf2_sha256
+from bson.objectid import ObjectId
 
 
 app = Flask(__name__)
@@ -17,7 +18,6 @@ mongo = PyMongo(app)
 def index():
     if 'username' in session:
         return redirect(url_for('userinfo'))
-    
     return render_template('index.html')
 
 
@@ -45,11 +45,10 @@ def register():
             hash = pbkdf2_sha256.hash(request.form['password'])
             users.insert({'name': request.form['username'], 'password': hash})
             session['username'] = request.form['username']
-            
-            return render_template('additional_reg_info.html', name=mongo.db.users.find_one({"name":request.form['username']}))
+            return render_template('additional_reg_info.html',
+                                    name=mongo.db.users.find_one(
+                                    {"name":request.form['username']}))
         flash('User name already exist')
-        
-
     return render_template('register.html')
 
 
@@ -62,18 +61,36 @@ def insert_additional_info():
 
 @app.route('/userinfo')
 def userinfo():
-    tim_testing = mongo.db.users_account_info.find()
-    for x in tim_testing:
-        print(x)
     return render_template('user_info.html',
                            users_account_info=
-                           mongo.db.users_account_info.find_one({"name":session['username']}))
+                           mongo.db.users_account_info.find_one(
+                               {"name":session['username']}))
 
 
 @app.route('/signout')
 def signout():
     session.clear()
     return redirect('/')
+
+
+@app.route('/edit_user_info/<users_id>')
+def edit_user_info(users_id):
+    users_info =  mongo.db.users_account_info.find_one({"_id": ObjectId(users_id)})
+    user = mongo.db.users.find_one({"name": session['username']})
+    return render_template('edit_user_info.html', info=users_info, users_login_details=user)
+
+
+@app.route('/update_user_info/<user_id>', methods=["POST"])
+def update_user_info(user_id):
+    user_info = mongo.db.users_account_info
+    user_info.update({'_id': ObjectId(user_id)},
+    {
+        'name':request.form.get('name'),
+        'date_of_birth':request.form.get('date_of_birth'),
+        'hobby': request.form.get('hobby'),
+        'favourite_moive': request.form.get('favourite_moive')
+    })
+    return redirect(url_for('userinfo'))
 
 
 if __name__ == '__main__':

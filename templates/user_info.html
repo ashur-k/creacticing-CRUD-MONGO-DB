@@ -5,7 +5,9 @@
 {% block content %}
 <div class="container p-2 m-5">
 
+
 <div class="row">
+
 <div class="col-md-3">
     <h6><strong>Name</strong></h6><p>{{users_account_info.name}}</p> 
 </div>
@@ -20,7 +22,12 @@
 </div>
 
 
+<div class="row">
+    <div class="col-md-12">
+        <a href="{{ url_for('signout') }}" class="btn btn-primary m-2 p-2">Signout</a>
+        <a href="{{url_for('edit_user_info', users_id=users_account_info._id)}}" class="btn btn-primary m-2 p-2">Edit-infomration</a>
+    </div>
 
-<a href="{{ url_for('signout') }}">Signout</a>
 </div>
 {% endblock %}
+ <!--   --> 
