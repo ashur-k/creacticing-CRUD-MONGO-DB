@@ -4,7 +4,6 @@ from flask_pymongo import PyMongo
 from passlib.hash import pbkdf2_sha256
 from bson.objectid import ObjectId
 
-
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET", "randomstring123")
 
@@ -12,6 +11,7 @@ app.config['MONGO_DBNAME'] = 'kitchen_guide'
 app.config['MONGO_URI'] = 'mongodb+srv://root:r00tUser@cluster0-dllo5.mongodb.net/kitchen_guide?retryWrites=true&w=majority'
 
 mongo = PyMongo(app)
+
 
 
 @app.route('/')
@@ -26,6 +26,8 @@ def login():
     users = mongo.db.users
     login_user = users.find_one({'name': request.form['username']})
     password_entered = request.form['password']
+    print(login_user)
+    print(password_entered)
     if login_user:
         if pbkdf2_sha256.verify(password_entered, login_user['password']):
             session['username'] = request.form['username']
